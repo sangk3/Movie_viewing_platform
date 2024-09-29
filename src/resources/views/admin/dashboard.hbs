@@ -1,0 +1,21 @@
+<span class="fs-5 fw-bold">Hi</span> <span class="headerAdmin fs-5 fw-bold"></span>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const accessToken = localStorage.getItem("accessToken");
+
+    if (accessToken) {
+      // Giải mã token và lấy username
+      const tokenParts = accessToken.split('.');
+      if (tokenParts.length === 3) {
+        const payload = tokenParts[1];
+        const decodedPayload = JSON.parse(atob(payload));
+        const username = decodedPayload.username;
+
+        // Gán username vào phần header
+        document.querySelector(".headerAdmin").innerHTML = username;
+      }
+    }
+  });
+
+</script>

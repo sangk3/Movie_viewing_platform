@@ -1,0 +1,25 @@
+<div class="mt-1">
+    <h3>Tạo thể loại</h3>
+
+    {{#if error}}
+    <div class="alert alert-danger">
+        {{error}}
+    </div>
+    {{/if}}
+
+    <form method="POST" action="/admin/store/category">
+        <div class="mb-3">
+            <label for="name" class="form-label">Thể Loại</label>
+            <input type="text" class="form-control" name="name" id="name" placeholder="Tên thể loại">
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Mô Tả</label>
+            <textarea class="form-control" name="description" id="description" rows="3"></textarea>
+        </div>
+</div>
+<button type="submit" class="btn btn-primary">Thêm</button>
+</form>
+
+<script>
+     CKEDITOR.replace( 'description' );
+</script>

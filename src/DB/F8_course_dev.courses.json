@@ -1,0 +1,98 @@
+[{
+  "_id": {
+    "$oid": "66e3a840462e46af6992decd"
+  },
+  "name": "DIỀU HÂU GẪY CÁNH [Thuyết Minh]",
+  "description": "<p>DIỀU H&Acirc;U GẪY C&Aacute;NH 1 [Thuyết Minh] | Phim H&agrave;nh Động Chiếu Rạp Mỹ Cực Hấp Dẫn</p>\r\n",
+  "videoid": "o-SiT7Pa8nk",
+  "image": "https://img.youtube.com/vi/o-SiT7Pa8nk/sddefault.jpg",
+  "category": {
+    "$oid": "66e3a7ee462e46af6992dec6"
+  },
+  "createdAt": {
+    "$date": "2024-09-13T02:49:36.131Z"
+  },
+  "updatedAt": {
+    "$date": "2024-09-26T16:45:43.957Z"
+  },
+  "slug": "dieu-hau-gay-canh-thuyet-minh",
+  "__v": 0,
+  "countries": "trung-quoc",
+  "catelist": {
+    "$oid": "66f42ac449369bf1a6a2662e"
+  }
+},
+{
+  "_id": {
+    "$oid": "66e3bae950087e376a1791aa"
+  },
+  "name": "CHIẾN HẠM ĐỘT KÍCH (Thuyết Minh) ",
+  "description": "<p>CHIẾN HẠM ĐỘT K&Iacute;CH (Thuyết Minh) | Phim H&agrave;nh Động Qu&acirc;n Sự Chống Khủng Bố | Phim Lẻ Hay 2024</p>\r\n",
+  "videoid": "hvS2Ys0EDDI",
+  "image": "https://img.youtube.com/vi/hvS2Ys0EDDI/sddefault.jpg",
+  "category": {
+    "$oid": "66e3a7ee462e46af6992dec6"
+  },
+  "createdAt": {
+    "$date": "2024-09-13T04:09:13.710Z"
+  },
+  "updatedAt": {
+    "$date": "2024-09-26T16:45:48.159Z"
+  },
+  "slug": "chien-ham-dot-kich-thuyet-minh",
+  "__v": 0,
+  "countries": "trung-quoc",
+  "catelist": {
+    "$oid": "66f42ac449369bf1a6a2662e"
+  }
+},
+{
+  "_id": {
+    "$oid": "66f2d9b08ab1001816ea53d9"
+  },
+  "name": "BĂNG CƯỚP LẠC LỐI ",
+  "description": "<p>BĂNG CƯỚP LẠC LỐI | PHIM PHI&Ecirc;U LƯU MỸ SI&Ecirc;U H&Agrave;I HƯỚC 2022 | PHIM THUYẾT MINH</p>\r\n",
+  "videoid": "iZfA-bggzNs",
+  "image": "https://img.youtube.com/vi/iZfA-bggzNs/sddefault.jpg",
+  "category": {
+    "$oid": "66e40afb6e9ba2966b65c026"
+  },
+  "countries": "au-my",
+  "deleted": false,
+  "createdAt": {
+    "$date": "2024-09-24T15:24:32.050Z"
+  },
+  "updatedAt": {
+    "$date": "2024-09-25T15:52:07.249Z"
+  },
+  "slug": "bang-cuop-lac-loi",
+  "__v": 0,
+  "catelist": {
+    "$oid": "66f42ac449369bf1a6a2662e"
+  }
+},
+{
+  "_id": {
+    "$oid": "66f43242082ab0eca0e5f092"
+  },
+  "name": "Deadpool & Wolverine 2024",
+  "description": "<p>Deadpool &amp; Wolverine 2024 si&ecirc;u h&agrave;i hước si&ecirc;u khắm bựa</p>\r\n",
+  "videoid": "9YNOKm-4kO4",
+  "image": "https://img.youtube.com/vi/9YNOKm-4kO4/sddefault.jpg",
+  "category": {
+    "$oid": "66e3a7ee462e46af6992dec6"
+  },
+  "catelist": {
+    "$oid": "66f42ac449369bf1a6a2662e"
+  },
+  "countries": "au-my",
+  "deleted": false,
+  "createdAt": {
+    "$date": "2024-09-25T15:54:42.474Z"
+  },
+  "updatedAt": {
+    "$date": "2024-09-25T15:56:12.381Z"
+  },
+  "slug": "deadpool-and-wolverine-2024",
+  "__v": 0
+}]

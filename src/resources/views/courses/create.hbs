@@ -1,0 +1,56 @@
+<div class="mt-1">
+    <h3>Đăng phim</h3>
+    <form method="POST" action="/admin/store">
+        <div class="mb-3">
+            <label for="name" class="form-label">Tên phim</label>
+            <input type="text" class="form-control" name="name" id="name" placeholder="Nhập tên phim">
+        </div>
+        <div class="mb-3">
+            <label for="name" class="form-label">Mô tả phim</label>
+            <textarea type="text" class="form-control" name="description" id="description" placeholder="Nhập mô tả"></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="category" class="form-label">Thể loại</label>
+            <select class="form-select" name="category" id="category" aria-label="Default select example">
+                <option>--Thể Loại--</option>
+                {{#each categories}}
+                <option value="{{this._id}}">{{this.name}}</option>
+                {{/each}}
+            </select>
+        </div>
+          <div class="mb-3">
+            <label for="catelist" class="form-label">Thể loại</label>
+            <select class="form-select" name="catelist" id="catelist" aria-label="Default select example">
+                <option>--Danh mục--</option>
+                {{#each catelist}}
+                <option value="{{this._id}}">{{this.name}}</option>
+                {{/each}}
+            </select>
+        </div>
+</div>
+<div class="mb-3">
+    <label for="countries" class="form-label">Quốc gia</label>
+    <select class="form-select" name="countries" id="countries" aria-label="Default select example">
+    <option>--Quốc gia--</option>
+    <option value="han-quoc">Hàn Quốc</option>
+    <option value="hong-kong">Hồng Kông</option>
+    <option value="nhat-ban">Nhật Bản</option>
+    <option value="thai-lan">Thái Lan</option>
+    <option value="trung-quoc">Trung Quốc</option>
+    <option value="tong-hop">Tổng Hợp</option>
+    <option value="viet-nam">Việt Nam</option>
+    <option value="au-my">Âu Mỹ</option>
+    <option value="dai-loan">Đài Loan</option>
+    </select>
+</div>
+<div class="mb-3">
+    <label for="name" class="form-label">VideoId</label>
+    <input type="text" class="form-control" name="videoid" id="videoid" placeholder="VideoId">
+</div>
+<button type="submit" class="btn btn-primary">Thêm khóa học</button>
+</form>
+
+</div>
+<script>
+    CKEDITOR.replace('description')
+</script>

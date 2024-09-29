@@ -1,0 +1,87 @@
+<h2>LOGIN FORM</h2>
+
+<form name="login-form" method="POST" action="/auth/checklogin">
+  <div class="mt-3 mb-3">
+    <label for="username" class="form-label">UserName</label>
+    <input type="text" class="form-control" name="username" id="username" placeholder="Enter Username">
+  </div>
+  <div class="mb-3">
+    <label for="password" class="form-label">Password</label>
+    <input type="password" name="password" class="form-control" id="myPassword" placeholder="Enter Password">
+  </div>
+  <input class="mb-2" type="checkbox" id="checkBtn"> Show Password <br>
+
+  <button type="submit" class="btn btn-primary">Login</button>
+</form>
+
+<script>
+  const checkBtn = document.getElementById("checkBtn");
+
+  checkBtn.onclick = function (e) {
+    if (!this.checked) {
+      document.querySelector("input[name='password']").type = "password";
+    }
+    else {
+      document.querySelector("input[name='password']").type = "text";
+    }
+
+  }
+  const loginForm = document.querySelector('form[name="login-form"]');
+
+  loginForm.onsubmit = async function (e) {
+    e.preventDefault();
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('myPassword').value;
+
+    if (!username && !password || !username || !password) {
+      alert("Please enter all the information")
+    }
+
+    try {
+      const response = await fetch('/auth/checklogin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ username, password })
+      })
+
+      const data = await response.json()
+
+
+
+      if (response.status === 200) {
+        // lưu accesssToken vào local storage
+        localStorage.setItem('accessToken', data.user.accessToken);
+        alert(data.message)
+        const adminRequest = await fetch('/admin/data', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        if (adminRequest.ok) {
+          const userData = await adminRequest.json();
+          //encode base64
+         const username= btoa(userData.username)
+        //  const usernameEncoded = encodeURIComponent(userData.username);
+        const url = `http://localhost:3000/admin?username=${username}`
+       
+          // Chuyển hướng đến trang admin với dữ liệu username
+          window.location.href = url;
+        } else {
+          alert('Unauthorized access');
+        }
+      }
+      else {
+        alert(data.message || "Login failed")
+      }
+
+    } catch (err) {
+      alert('Error Login')
+    }
+
+  }
+
+</script>

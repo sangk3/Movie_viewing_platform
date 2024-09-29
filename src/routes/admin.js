@@ -1,0 +1,61 @@
+//  tách route sử dụng route.use() cấu hình route
+
+const express = require('express');
+// sử dụng phương thức Router của express để định nghĩa tuyến đường
+const router = express.Router();
+const adminController = require("../app/controllers/AdminController")
+const authMiddleware = require("../app/middleware/authMiddleware")
+const sortMiddleware = require("../app/middleware/sortMiddleware")
+
+router.get('/account',adminController.showAccount)
+router.get('/dashboard',adminController.showDashboard)
+
+// newsController.index 
+router.get('/create',adminController.create);
+router.get('/create/category',adminController.createCategory);
+router.post('/store',adminController.store);
+router.post('/store/category',adminController.storeCategory);
+router.get('/create/catelist',adminController.createCateList);
+router.post('/store/catelist',adminController.storeCateList);
+router.get('/stored/catelist',adminController.storedCateList)
+router.post('/handle-form-actions/catelist',adminController.handleFormActionsCateList)
+router.get('/stored/category',adminController.storedCategory)
+router.get('/stored/courses',adminController.storedCourses)
+router.post('/handle-form-actions/category',adminController.handleFormActionsCategory)
+router.post('/handle-form-actions',adminController.handleFormActions)
+router.get('/:id/edit',adminController.edit)
+router.get('/:id/edit/category',adminController.editCategory)
+router.get('/:id/edit/catelist',adminController.editCateList)
+router.delete('/:id/catelist',adminController.deleteCateList)
+router.delete('/:id/category',adminController.deleteCategory)
+router.delete('/:id',adminController.delete)
+
+// xóa vĩnh viễn
+router.delete('/:id/force',adminController.destroy)
+router.delete('/:id/category/force',adminController.destroyCategory)
+router.delete('/:id/catelist/force',adminController.destroyCateList)
+
+router.get('/trash/courses',adminController.trash)
+router.get('/trash/category',adminController.trashCategory)
+router.get('/trash/catelist',adminController.trashCateList)
+// phương thức để chỉnh sửa courses
+router.put('/:id',adminController.update)
+// /admin/{{categories._id}}/category
+router.put('/:id/category',adminController.updateCategory)
+
+router.put('/:id/catelist',adminController.updateCateList)
+// patch sẽ là 1 hành động khác các hành động mặc định là hành động restore
+router.patch('/:id/restore',adminController.restore)
+// restore category
+router.patch('/:id/category/restore',adminController.restoreCategory)
+
+router.patch('/:id/catelist/restore',adminController.restoreCateList)
+// cấp route con của /news trỏ về news/path-con-... với phương thức get
+
+
+router.get('/data',authMiddleware.verifyToken,adminController.check)
+
+router.get('/',adminController.show)
+// cấp route con của /news cấu hình param của /news với phương thức get
+
+module.exports = router;

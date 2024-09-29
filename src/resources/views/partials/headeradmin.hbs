@@ -1,0 +1,54 @@
+<nav class="navbar navbar-expand-lg bg-success" data-bs-theme="dark">
+  <div class="container-fluid ms-4">
+    <a class="navbar-brand fw-bold" href="/admin">PlayHub</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <img src="https://lh3.google.com/u/0/ogw/AF2bZyh7KNyROmACdxmvLsceoJtP5ErMolIc1YNviYikIqJwsA=s32-c-mo" alt=""
+              class="user-avatar">
+            Hi <span class="usernameDisplay">guest</span>
+          </a>
+          <ul class="dropdown-menu">
+            {{!-- <li><a class="dropdown-item" href="/admin/create/category">Add Category</a></li>
+            <li><a class="dropdown-item" href="/admin/create">Add Course</a></li>
+            <li><a class="dropdown-item" href="/admin/stored/courses">My Course</a></li>
+            <li><a class="dropdown-item" href="/admin/stored/category">My Category</a></li>
+            <li><a class="dropdown-item" href="/admin/stored/news">My News</a></li> --}}
+            <li><a class="dropdown-item" href="#">Information</a></li>
+            <li><a class="dropdown-item" href="/auth/login">Log out</a></li>
+          </ul>
+
+
+        </li>
+
+
+      </ul>
+
+    </div>
+  </div>
+</nav>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const accessToken = localStorage.getItem("accessToken");
+
+    if (accessToken) {
+      // Giải mã token và lấy username
+      const tokenParts = accessToken.split('.');
+      if (tokenParts.length === 3) {
+        const payload = tokenParts[1];
+        const decodedPayload = JSON.parse(atob(payload));
+        const username = decodedPayload.username;
+
+        // Gán username vào phần header
+        document.querySelector(".usernameDisplay").textContent = username;
+      }
+    }
+  });
+
+</script>

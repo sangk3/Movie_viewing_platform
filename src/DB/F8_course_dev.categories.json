@@ -1,0 +1,45 @@
+[{
+  "_id": {
+    "$oid": "66e3a7ee462e46af6992dec6"
+  },
+  "name": "hành động",
+  "description": "<p>Thể loại phim với nhiều t&igrave;nh tiết giật g&acirc;n, những pha h&agrave;nh động kịch t&iacute;nh v&agrave; hấp dẫn</p>\r\n",
+  "deleted": false,
+  "createdAt": {
+    "$date": "2024-09-13T02:48:14.943Z"
+  },
+  "updatedAt": {
+    "$date": "2024-09-19T16:21:33.672Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66e40afb6e9ba2966b65c026"
+  },
+  "name": "hài hước",
+  "description": "Thể loại phim mang đậm tiếng cười",
+  "deleted": false,
+  "createdAt": {
+    "$date": "2024-09-13T09:50:51.099Z"
+  },
+  "updatedAt": {
+    "$date": "2024-09-13T09:50:51.099Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66f438975a6f01e7275d75ed"
+  },
+  "name": "tâm lý",
+  "description": "<p>t&acirc;m l&yacute;</p>\r\n",
+  "deleted": false,
+  "createdAt": {
+    "$date": "2024-09-25T16:21:43.089Z"
+  },
+  "updatedAt": {
+    "$date": "2024-09-25T16:21:43.089Z"
+  },
+  "__v": 0
+}]

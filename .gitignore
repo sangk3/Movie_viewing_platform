@@ -1,0 +1,5 @@
+# Bỏ đi các file không muốn push lên remote
+.vscode
+src/public/css/
+node_modules/
+src/public/vendor/

@@ -1,0 +1,17 @@
+// viết code ở đây sau đó npm run watch để render ra
+//  app.css
+
+@import '_variable';
+
+.card-course-item {
+    margin-top: 16px;
+}
+
+.card-img-top {
+    transition: transform 0.3 ease-in-out;
+}
+
+.card-img-top:hover {
+    position: relative;
+    top: -4px;
+}

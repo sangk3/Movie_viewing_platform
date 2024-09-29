@@ -1,0 +1,105 @@
+<div class="mt-4">
+    <div>
+        <h3>Thể loại đã xóa</h3>
+        <a class="mt-4" href="/admin/stored/category">Danh sách thể loại</a>
+    </div>
+    <table class="table mt-4">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">thể loạic</th>
+                <th scope="col">Mô tả</th>
+                <th scope="col">Thời gian xóa</th>
+                <th scope="col">Chức năng</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each categories}}
+            <tr>
+                {{!-- {{index}} Lấy ra chỉ mục của array --}}
+                {{!-- tạo ra function sum ở Index.js nhận 2 biến index và 1 --}}
+                <td scope="row">{{sum @index 1}}</td>
+                <td>{{this.name}}</td>
+                <td>{{this.description}}</td>
+                <td>{{this.deletedAt}}</td>
+                <td>
+                    <a href="" class="btn btn-link btn-restore" data-id="{{this._id}}">Khôi phục</a>
+                    <a class="btn btn-link" data-bs-toggle="modal" data-bs-target="#deleteModal"
+                        data-id="{{this._id}}">Xóa vĩnh viễn</a>
+                </td>
+            </tr>
+            {{!-- handlebars cung cấp {{else}} khi each không có dữ liệu thì vào else --}}
+            {{else}}
+            {{!-- colspan='5' 1 thẻ td chiếm hết 5 cột --}}
+            <tr>
+                {{!-- class text-center căn giữa trong boostrap --}}
+                <td class="text-center" colspan="5">Thùng rác trống
+                    {{!-- tăng trải nghiệm người dùng --}}
+                    <a href="/admin/stored/category">Danh sách thể loại</a>
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>
+
+{{!-- confirm delete --}}
+
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Thông báo</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Hành động này không thể khôi phục?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                <button id="btn-delete" type="button" class="btn btn-danger">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{!-- DELETE FORM --}}
+<form name="delete-form" method="POST"></form>
+{{!-- restore form --}}
+<form name="restore-form" method="POST"></form>
+{{!-- dùng boostrap để lấy được data khi nhấn nút yes--}}
+<script>
+    // sử dung jquery ($) lấy ra tất cả các btn-restore 
+    var deleteid;
+    var deleteform = document.querySelector('form[name="delete-form"]');
+    var restoreform = document.querySelector('form[name="restore-form"]');
+
+    const deleteModal = document.getElementById('deleteModal')
+    var restorebtn = document.querySelectorAll('.btn-restore');
+    if (deleteModal) {
+        deleteModal.addEventListener('show.bs.modal', event => {
+            var button = event.relatedTarget
+            deleteid = button.getAttribute('data-id')
+
+        });
+
+    }
+
+    var deleteButton = document.getElementById('btn-delete');
+    // Khi mà người dùng nhấn nút click
+    deleteButton.onclick = function () {
+        deleteform.action = `/admin/${deleteid}/category/force?_method=DELETE`
+        deleteform.submit();
+
+    }
+    for (var i = 0; i < restorebtn.length; i++) {
+        restorebtn[i].onclick = function (e) {
+            e.preventDefault();
+            // Lấy ra id của data
+            var restoreid = this.getAttribute('data-id')
+            restoreform.action = `/admin/${restoreid}/category/restore?_method=PATCH`
+            restoreform.submit();
+        }
+    }
+</script>
+{{!-- delteform.submit() sẽ submit form đi với phương thức DELETE --}}

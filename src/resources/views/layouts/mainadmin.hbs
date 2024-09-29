@@ -1,0 +1,101 @@
+{{!-- Viết đủ layout gồm cả header và footer và body là phần riêng của từng trang --}}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    {{!-- link boostrap5 cdn+scripts--}}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="/vendor/fontawesome-free-6.6.0-web/css/all.min.css">
+    <script src="https://cdn.ckeditor.com/4.9.1/standard/ckeditor.js"></script>
+    {{!-- đường dẫn do sử dụng express static để đọc tệp public --}}
+    <link rel="stylesheet" href="/css/admin.css">
+
+</head>
+
+<body>
+    <div class="app">
+        {{> headeradmin}}
+
+        <div class="app d-flex">
+            <!-- Sidebar -->
+            <div class="sidebar bg-primary text-white p-3" style="min-width: 250px; min-height: 100vh;">
+                <h2 class="text-center me-5 fs-3">Main Menu</h2>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/admin/dashboard">
+                            <i class="fas fa-tachometer-alt"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/admin/stored/courses">
+                            <i class="fa-solid fa-film" style="color: #f7f7f7;"></i> My Films
+                        </a>
+                    </li>
+                       <li class="nav-item"></li>
+                        <a class="nav-link text-white" href="/admin/stored/catelist">
+                        <i class="fa-solid fa-table-list"></i> Category
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/admin/stored/category">
+                            <i class="fa-solid fa-list" style="color: #f9fafa;"></i> Genre
+                        </a>
+                    </li>
+                    <li class="nav-item accountManager">
+                        <a class="nav-link text-white" href="/admin/account">
+                            <i class="fas fa-users"></i> Account Manager
+                        </a>
+                    </li>
+                       <li class="nav-item accountManager"></li>
+                        <a class="nav-link text-white" href="/admin/comment">
+                           <i class="fa-solid fa-comment"></i> Comment Manager
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="content flex-grow-1 p-4">
+                {{{body}}}
+            </div>
+
+        </div>
+        {{> footeradmin}}
+    </div>
+    {{!-- Jquery --}}
+
+
+    {{!-- link boostrap scripts --}}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+
+
+</body>
+
+</html>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const accountManager =document.querySelector('.accountManager')
+        const accessToken = localStorage.getItem("accessToken");
+
+        if (accessToken) {
+            // Giải mã token và lấy username
+            const tokenParts = accessToken.split('.');
+            if (tokenParts.length === 3) {
+                const payload = tokenParts[1];
+                const decodedPayload = JSON.parse(atob(payload));
+                const admin = decodedPayload.admin;
+                console.log(admin);
+                if(!admin){
+                    accountManager.style.display='none'
+                }
+            
+            }
+        }
+    });
+
+</script>

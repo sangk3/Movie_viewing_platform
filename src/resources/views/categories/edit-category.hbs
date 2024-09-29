@@ -1,0 +1,31 @@
+<div class="mt-4"></div>
+<h3>Cập nhật khóa học</h3>
+
+{{#if error}}
+<div class="alert alert-danger">
+    {{error}}
+</div>
+{{/if}}
+<form class="mt-4" method="POST" action="/admin/{{categories._id}}/category?_method=PUT">
+    <div class="mb-3">
+        <label for="name" class="form-label">Thể loại</label>
+        <input type="text" class="form-control" name="name" value="{{categories.name}}" id="name"
+            placeholder="Nhập tên khóa học">
+    </div>
+    <div class="mb-3">
+        <label for="name" class="form-label">Mô tả </label>
+        {{!-- text area nhận value dạng childen --}}
+        <textarea type="text" class="form-control" name="description" id="description"
+        {{!-- {{{}}}: cú pháp thay thế các dấu <>?- chống tấn công XSS --}}
+            placeholder="Nhập mô tả">{{{categories.description}}}</textarea>
+    </div>
+
+
+
+    <button type="submit" class="btn btn-primary">Sửa</button>
+</form>
+
+</div>
+<script>
+     CKEDITOR.replace( 'description' );
+</script>

@@ -1,0 +1,14 @@
+[{
+  "_id": {
+    "$oid": "66f42ac449369bf1a6a2662e"
+  },
+  "name": "phim chiếu rạp",
+  "description": "<p>L&agrave; c&aacute;c bộ phim mới nhất được cập nhật</p>\r\n",
+  "createdAt": {
+    "$date": "2024-09-25T15:22:44.883Z"
+  },
+  "updatedAt": {
+    "$date": "2024-09-25T15:26:15.637Z"
+  },
+  "__v": 0
+}]
