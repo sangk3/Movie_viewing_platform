@@ -15,13 +15,8 @@
             Hi <span class="usernameDisplay">guest</span>
           </a>
           <ul class="dropdown-menu">
-            {{!-- <li><a class="dropdown-item" href="/admin/create/category">Add Category</a></li>
-            <li><a class="dropdown-item" href="/admin/create">Add Course</a></li>
-            <li><a class="dropdown-item" href="/admin/stored/courses">My Course</a></li>
-            <li><a class="dropdown-item" href="/admin/stored/category">My Category</a></li>
-            <li><a class="dropdown-item" href="/admin/stored/news">My News</a></li> --}}
             <li><a class="dropdown-item" href="#">Information</a></li>
-            <li><a class="dropdown-item" href="/auth/login">Log out</a></li>
+            <li><a class="dropdown-item logout" href="/auth/login">Log out</a></li>
           </ul>
 
 
@@ -36,7 +31,7 @@
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     const accessToken = localStorage.getItem("accessToken");
-
+    const logout = document.querySelector('.logout')
     if (accessToken) {
       // Giải mã token và lấy username
       const tokenParts = accessToken.split('.');
@@ -49,6 +44,12 @@
         document.querySelector(".usernameDisplay").textContent = username;
       }
     }
+    logout.onclick = function(e){
+      e.preventDefault();
+      localStorage.removeItem("accessToken");
+      location.href = "/auth/login";
+    }
+    
   });
 
 </script>

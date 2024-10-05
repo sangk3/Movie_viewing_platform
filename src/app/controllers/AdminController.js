@@ -2,7 +2,9 @@ const Course = require('../models/Course')
 const Categories = require('../models/Categories')
 const User = require('../models/User')
 const CateList = require('../models/CateList')
+const Infor = require('../models/Information')
 const { multipleMongooseToObject, mongooseToObject } = require('../../utill/mongoose')
+const { response } = require('express')
 
 class AdminController {
 
@@ -29,31 +31,20 @@ class AdminController {
 
     // logic handle for create course
     create(req, res, next) {
-        Promise.all([Categories.find({}),CateList.find({})])
-        .then(function([category,catelist]){
-            const categorieName = [...new Set(category.map(category => category.name))];
-            const catelistName =[...new Set(catelist.map(catelist => catelist.name))]
-            res.render('courses/create', {
-                layout: 'mainadmin',
-                categories: multipleMongooseToObject(category),
-                catelist:multipleMongooseToObject(catelist),
-                name: [categorieName,catelistName]
-            })
-        })
+        Promise.all([Categories.find({}), CateList.find({})])
+            .then(function ([category, catelist]) {
 
-
-        Categories.find({})
-            .then(function (category) {
-                const categorieName = [...new Set(category.map(category => category.name))];
                 res.render('courses/create', {
                     layout: 'mainadmin',
                     categories: multipleMongooseToObject(category),
-                    name: categorieName
+                    catelist: multipleMongooseToObject(catelist)
+
                 })
             })
             .catch(function (err) {
                 next(err);
             })
+
 
     }
 
@@ -186,89 +177,71 @@ class AdminController {
 
     // [GET] /admin/stored/courses
     storedCourses(req, res, next) {
+        const page = parseInt(req.query.page) || 1;  // Lấy trang hiện tại từ query hoặc mặc định là trang 1
+        const pageSize = parseInt(req.query.pageSize) || 3;  // Số lượng khóa học trên mỗi trang, mặc định là 2
+        const skipPage = (page - 1) * pageSize;  // Tính toán số tài liệu cần bỏ qua
+        const searchTerm = req.query.search || '';  // Lấy từ khóa tìm kiếm từ query hoặc rỗng nếu không có
+        const query = {};  // Tạo query tìm kiếm
 
-        // search 
-
-
-        let courseQuery = Course.find({})
-        if (req.query.hasOwnProperty('_sort')) {
-            courseQuery = courseQuery.sort({
-                [req.query.column]: req.query.type
-            })
-
-        }
-        // search
-        let searchTerm = req.query.search || '';  // Lấy search term từ query hoặc để trống nếu không có
-        let query = {};
-
-        // Nếu có searchTerm, thêm điều kiện tìm kiếm theo tên phim, quốc gia và thể loại
+        // Nếu có searchTerm, tìm kiếm theo tên, quốc gia và thể loại phim
         if (searchTerm) {
-            // Tìm kiếm theo tên, quốc gia (countries), và thể loại phim (category)
-            Categories.find({ name: new RegExp(searchTerm, 'i') })  // Tìm thể loại theo search term
+            Categories.find({ name: new RegExp(searchTerm, 'i') })
                 .then((foundCategories) => {
                     const categoryIds = foundCategories.map(category => category._id);
                     query.$or = [
-                        { name: new RegExp(searchTerm, 'i') },        // Tìm kiếm theo tên phim
-                        { countries: new RegExp(searchTerm, 'i') },   // Tìm kiếm theo quốc gia
-                        { category: { $in: categoryIds } }            // Tìm kiếm theo thể loại
+                        { name: new RegExp(searchTerm, 'i') },  // Tìm kiếm theo tên phim
+                        { countries: new RegExp(searchTerm, 'i') },  // Tìm kiếm theo quốc gia
+                        { category: { $in: categoryIds } }  // Tìm kiếm theo thể loại
                     ];
 
-                    // Tiếp tục với query của Course
-                    let courseQuery = Course.find(query).populate('category');
-
-                    // Nếu có yêu cầu sắp xếp (sorting)
-                    if (req.query.hasOwnProperty('_sort')) {
-                        courseQuery = courseQuery.sort({
-                            [req.query.column]: req.query.type
-                        });
-                    }
-
-                    // Sử dụng Promise.all để thực hiện đồng thời việc tìm kiếm và đếm số khóa học bị xóa
-                    return Promise.all([courseQuery, Course.countDocumentsWithDeleted({ deleted: true })]);
-                })
-                .then(([courses, deleteCourse]) => {
-                    const noResultsFound = courses.length === 0;
-                    // Render kết quả ra giao diện admin
-                    res.render('admin/stored-courses', {
-                        layout: 'mainadmin',
-                        courses: multipleMongooseToObject(courses),
-                        deleteCourse: deleteCourse,
-                        searchTerm: searchTerm,  // Để hiển thị lại giá trị tìm kiếm lên form nếu cần,
-                        noResultsFound: noResultsFound
-
-                    });
+                    // Tiếp tục với việc tìm kiếm khóa học
+                    return runCourseQuery(query);
                 })
                 .catch(next);
         } else {
-            // Nếu không có search term, thực hiện tìm kiếm như bình thường
-            let courseQuery = Course.find({}).populate([{path:'category'},{path:'catelist'}]);
+            // Nếu không có từ khóa tìm kiếm, chỉ phân trang và sắp xếp
+            runCourseQuery(query);
+        }
 
+        function runCourseQuery(query) {
+            let courseQuery = Course.find(query)
+                .skip(skipPage)
+                .limit(pageSize)
+                .populate([{ path: 'category' }, { path: 'catelist' }]);
+
+            // Nếu có yêu cầu sắp xếp, thêm phần sort vào query
             if (req.query.hasOwnProperty('_sort')) {
                 courseQuery = courseQuery.sort({
                     [req.query.column]: req.query.type
                 });
             }
 
-            Promise.all([courseQuery, Course.countDocumentsWithDeleted({ deleted: true })])
-                .then(([courses, deleteCourse]) => {
+            // Thực hiện query tìm khóa học và đếm số khóa học bị xóa đồng thời
+            Promise.all([courseQuery, Course.countDocuments(query), Course.countDocumentsWithDeleted({ deleted: true })])
+                .then(([courses, totalCourses, deleteCourse]) => {
+                    const totalPages = Math.ceil(totalCourses / pageSize);  // Tính tổng số trang
+                    const noResultsFound = courses.length === 0;  // Kiểm tra xem có kết quả tìm kiếm hay không
+
+                    // Render kết quả ra giao diện admin
                     res.render('admin/stored-courses', {
                         layout: 'mainadmin',
                         courses: multipleMongooseToObject(courses),
-                        deleteCourse: deleteCourse
+                        deleteCourse: deleteCourse,
+                        searchTerm: searchTerm,
+                        noResultsFound: noResultsFound,
+                        currentPage: page,
+                        totalPages: totalPages
                     });
                 })
                 .catch(next);
         }
-
-
-
-
     }
+
     // [GET] admin/:id/edit
     edit(req, res, next) {
         const availableCountries = ['han-quoc', 'hong-kong', 'nhat-ban', 'thai-lan', 'trung-quoc', 'tong-hop', 'viet-nam', 'au-my', 'dai-loan'];
-        Promise.all([Course.findOne({ _id: req.params.id }).populate([{path:'category'},{path:'catelist'}]),Categories.find({}),CateList.find({})])
-            .then(function ([course, categorie,catelist]) {
+        Promise.all([Course.findOne({ _id: req.params.id }).populate([{ path: 'category' }, { path: 'catelist' }]), Categories.find({}), CateList.find({})])
+            .then(function ([course, categorie, catelist]) {
                 res.render('admin/edit', {
                     layout: 'mainadmin',
                     courses: mongooseToObject(course),
@@ -579,6 +552,15 @@ class AdminController {
                 next(err);
             });
     }
+    destroyAccount(req, res, next) {
+        User.deleteOne({ _id: req.params.id })
+            .then(function () {
+                res.status(200).json({ message: 'Delete success' })
+            })
+            .catch(function (err) {
+                res.status(500).json({ message: 'Delete fail' })
+            })
+    }
 
     // [POST] /admin/handle-form-actions
     handleFormActions(req, res, next) {
@@ -661,8 +643,72 @@ class AdminController {
         })
 
     }
-
+    // [GET] /admin/create/info
+    createInfomation(req, res, next) {
+        res.render('admin/infor/create', {
+            layout: 'mainadmin'
+        })
+    }
+    async storeInfo(req, res, next) {
+        try {
+            const exitInfo = await Infor.findOne({ email: req.body.email })
+            const exitPhone = await Infor.findOne({ phone: req.body.phone })
+            if (exitInfo) {
+                return res.status(403).json({ message: 'Email đã tồn tại' })
+            }
+            else if (exitPhone) {
+                return res.status(403).json({ message: 'Số điện thoại đã tồn tại' })
+            }
+            const infoUser = await new Infor({
+                name: req.body.name,
+                email: req.body.email,
+                phone: req.body.phone,
+                address: req.body.address,
+            })
+            const info = await infoUser.save()
+            res.status(200).json({ message: 'sucess' })
+        }
+        catch (err) {
+            res.status(500).json({ message: 'error' })
+        }
+    }
+    // [GET] /admin/stored/info
+    async showInformation(req, res, next) {
+        const info = await Infor.find({})
+        res.render('admin/infor/stored-info', {
+            layout: 'mainadmin',
+            infors: multipleMongooseToObject(info)
+        })
+    }
+    editInfor(req, res, next) {
+        Infor.findOne({ _id: req.params.id })
+            .then(function(info) {
+                res.render('admin/infor/edit', {
+                    layout: 'mainadmin',
+                    info: mongooseToObject(info),
+                })
+            })
+            .catch((err) => {
+                next(err)
+            })
+    }
+    updateInfo(req,res,next){
+        Infor.updateOne({_id:req.params.id},{
+            name: req.body.name,
+            email: req.body.email,
+            phone: req.body.phone,
+            address: req.body.address
+        })
+        .then(function(){
+            res.status(200).json({message:'Cập nhật thành công'})
+        })
+        .catch(function(){
+            res.status(500).json({message:'Cập nhật thất bại'})
+        })
+        
+    }
 }
+
 
 
 

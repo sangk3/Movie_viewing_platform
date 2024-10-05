@@ -9,7 +9,8 @@ class authController {
     // [GET] /auth/register
     showRegister(req, res, next) {
         res.render('admin/register/register', {
-            layout: 'mainadmin'
+            layout: 'mainadmin',
+            email:req.query.email
         })
     }
     // [GET] /auth/login
@@ -26,7 +27,7 @@ class authController {
             if (existingUser) {
                 return res.status(403).json({ message: "Email already exits" });
             }
-
+            console.log(req.body)
             // bcrypt.genSalt: tạo 1 chuỗi 10 kí tự ngẫu nhiên
             const salt = await bcrypt.genSalt(10);
             // endcode pass --> chuỗi 10 kí tự đó
@@ -36,13 +37,13 @@ class authController {
                 email: req.body.email,
                 password: hashed
             })
-
+                console.log(newUser)
             // dùng để lưu vào database
             const user = await newUser.save()
             // res.render('admin/login/login',{
             //     layout: 'login',
             // })
-            res.status(200).json({user: user,message: 'success'})
+            res.status(200).json({user,message: 'success'})
            
         }
 
@@ -145,6 +146,7 @@ class authController {
         })
 
     }
+ 
 
 
 }

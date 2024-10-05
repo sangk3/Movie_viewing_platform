@@ -4,6 +4,7 @@ const authMiddleware = {
   // xác thực token 
   verifyToken: function (req, res, next) {
     const token = req.headers['authorization'];
+    console.log(token)
     if (token) {
       // lấy ra token: Bearer token
       const accessToken = token.split(" ")[1]
@@ -29,7 +30,7 @@ const authMiddleware = {
         next();
       }
       else {
-        res.status(403).json('Bạn không có quyền xóa')
+        res.status(403).json({message:'Bạn không có quyền'})
       }
     })
   }

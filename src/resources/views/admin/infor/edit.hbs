@@ -1,0 +1,74 @@
+<div class="mt-4"></div>
+<h3>Cập nhật thông tin</h3>
+
+<form class="mt-4" name="update-form">
+    <div class="mb-3">
+        <label for="name" class="form-label">Họ Tên</label>
+        <input type="text" class="form-control" name="name" id="name" value="{{info.name}}" placeholder="Nhập tên">
+    </div>
+    <div class="mb-3">
+        <label for="email" class="form-label">email</label>
+        <input type="email" class="form-control" name="email" id="email" placeholder="Nhập email"
+            value="{{info.email}}">
+    </div>
+    <div class="mb-3">
+        <label for="phone" class="form-label">Số điện thoại</label>
+        <input type="text" class="form-control" name="phone" id="phone" placeholder="Nhập số điện thoại"
+            value="0{{info.phone}}">
+
+    </div>
+    <div class="mb-3">
+        <label for="address" class="form-label">Địa chỉ</label>
+        <textarea class="form-control" name="address" id="address" rows="3">{{{info.address}}}</textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Sửa</button>
+</form>
+
+</div>
+<script>
+    CKEDITOR.replace('address');
+
+    const updateForm = document.querySelector('form[name="update-form"]')
+    updateForm.onsubmit = async function (e) {
+        e.preventDefault()
+        const name = document.getElementById('name').value
+        const email = document.getElementById('email').value
+        const phone = document.getElementById('phone').value
+        const address = CKEDITOR.instances['address'].getData()
+
+        if (name.trim() === '' || email.trim() === '' || phone.trim() === '') {
+            alert('Vui lòng nhập đầy đủ thông tin');
+            return false;
+        }
+        else if (phone.trim().length > 11) {
+            alert('Số điện thoại không hợp lệ');
+            return false;
+        }
+        const updateId = '{{info._id}}'
+        const response = await fetch(`/admin/${updateId}/info`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Baerer ${localStorage.getItem('accessToken')}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                name,
+                email,
+                phone,
+                address
+            })
+
+        })
+
+        const data = await response.json();
+        if (response.ok) {
+            alert(data.message)
+            window.location.href = 'http://localhost:3000/admin/stored/info'
+        } else {
+            alert(data.error)
+
+        }
+    }
+
+</script>

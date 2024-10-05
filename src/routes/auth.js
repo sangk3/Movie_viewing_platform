@@ -7,6 +7,7 @@ const authController = require("../app/controllers/authController")
 router.get('/register',authController.showRegister)
 router.get('/login',authController.showLogin)
 // Kiểm tra thông tin đăng nhập
+
 router.post('/checklogin',authController.loginUser)
 // đăng kí tài khoản 
 router.post('/create',authController.createUser)

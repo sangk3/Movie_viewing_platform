@@ -2,14 +2,68 @@
 {{!-- this tương ứng với từng document --}}
 {{!-- Nhận key từ bên controller và chứ value của key đó --}}
 {{!-- mt-4 cách top một đoạn. Sau đó sử dụng grid chia layout --}}
+<!-- Example split danger button -->
+<!-- Example split danger button -->
+<form action="search" class="mt-3 d-flex justify-content-end">
+    <div class="dropdown me-2">
+        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+         Thể loại
+        </a>
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Action</a></li>
+            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
+        </ul>
+    </div>
+    <!-- Example split danger button -->
+   <div class="dropdown me-2">
+        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+         Quốc gia
+        </a>
+        <ul class="dropdown-menu dropdown-menu-dark">
+            <li><a class="dropdown-item" href="#">Action</a></li>
+            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
+        </ul>
+    </div>
+      <div class="dropdown me-2">
+        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+         Năm phát hành
+        </a>
+        <ul style="" class="dropdown-menu dropdown-menu-dark">
+            <li><a class="dropdown-item" href="#">Action</a></li>
+            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
+        </ul>
+    </div>
+      <div class="dropdown">
+        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+         Thể loại
+        </a>
+        <ul class="dropdown-menu dropdown-menu-dark">
+            <li><a class="dropdown-item" href="#">Action</a></li>
+            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
+        </ul>
+    </div>
+    <button type="button" class="btn btn-warning ms-2">Tìm kiếm</button>
+</form>
+
+
+
 <div class="mt-3">
 
     <!-- As a link -->
     <div class="container">
-        <h3 class="text-success">{{courseName}}</h3>
+        <h3 class="text-success">Phim {{courseName}}</h3>
         <nav class="navbar bg-body-secondary mt-2">
             <div class="container-fluid">
-                <p class="navbar-brand m-0"><a class="text-success text-decoration-none fw-bold" href="/"><i class="fa-solid fa-house me-2" style="color: #258d6e;"></i>Phim mới ></a><span
+                <p class="navbar-brand m-0"><a class="text-success text-decoration-none fw-bold" href="/"><i
+                            class="fa-solid fa-house me-2" style="color: #258d6e;"></i>Phim mới ></a><span
                         class="fs-6 ">Phim {{courseName}}</span></p>
             </div>
         </nav>
@@ -17,8 +71,9 @@
         <!-- As a heading -->
         <nav class="navbar bg-dark-subtle mt-2 mb-4">
             <div class="container-fluid">
-                <p class="navbar-brand mb-0 fs-6">Khám phá danh sách <span class="text-success fw-bold">Phim {{courseName}}</span> mới nhất và hấp dẫn, cập nhật liên
-                    tục trên phimchill.net 
+                <p class="navbar-brand mb-0 fs-6">Khám phá danh sách <span class="text-success fw-bold">Phim
+                        {{courseName}}</span> mới nhất và hấp dẫn, cập nhật liên
+                    tục trên phimchill.net
                 </p>
             </div>
         </nav>

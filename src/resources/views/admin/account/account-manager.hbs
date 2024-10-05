@@ -44,9 +44,10 @@
         <th scope="col">STT</th>
         <th scope="col">Username</th>
         <th scope="col">Password</th>
+        <th scope="col">Email</th>
         <th scope="col">Role</th>
         <th scope="col">Time create
-             {{{sort 'createdAt' _sort}}}
+            {{{sort 'createdAt' _sort}}}
         </th>
         <th scope="col">Chức năng</th>
 
@@ -63,12 +64,13 @@
             {{!-- {{index}} Lấy ra chỉ mục của array --}}
             {{!-- tạo ra function sum ở Index.js nhận 2 biến index và 1 --}}
             <td scope="row">{{sum @index 1}}</td>
-            <td>{{this.username}}</td>
+            <td>{{this.username}}</td> 
             <td>{{{this.password}}}</td>
+            <td>{{{this.email}}}</td>
             <td>{{change this.admin}}</td>
-            <td>{{this.createdAt}}</td>
+            <td>{{getYear this.createdAt}}</td>
             <td>
-                <a href="/admin/{{this._id}}/edit" class="btn btn-link">Sửa</a>
+                <a href="/admin/{{this._id}}/account-edit" class="btn btn-link">Sửa</a>
                 <a class="btn btn-link" data-bs-toggle="modal" data-bs-target="#deleteModal"
                     data-id="{{this._id}}">Xóa</a>
             </td>
@@ -135,8 +137,32 @@
     var deleteButton = document.getElementById('btn-delete');
     // Khi mà người dùng nhấn nút click
     deleteButton.onclick = function () {
-        deleteform.action = `/admin/${deleteid}?_method=DELETE`
-        deleteform.submit();
+        //deleteform.action = `/admin/${deleteid}/account?_method=DELETE`
+        //deleteform.submit();
+
+        const responses = fetch(`/admin/account/${deleteid}`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' }
+        })
+
+        responses
+            .then(function (response) {
+                // Kiểm tra phản hồi trước khi xử lý JSON
+                return response.json(); // Chuyển đổi phản hồi thành JSON
+            })
+            .then(function (data) {
+                if (responses.ok) {
+                    alert(data.message); // Hiển thị thông báo từ server
+                    window.location.reload(); // Tải lại trang sau khi xóa thành công
+                }
+                else {
+                    alert(data.message); // Thông báo lỗi từ server
+                }
+            })
+            .catch(function (error) {
+                 alert('Delete failed. Please try again.'); // Hiển thị thông báo lỗi nếu fetch thất bại
+            });
+
 
     }
     // phương thức của jquery khi bất sự kiện

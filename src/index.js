@@ -100,22 +100,48 @@ app.engine('hbs', engine({
     toUpper: function (str) {
       return str.toUpperCase()
     },
-    change:function(isAdmin){
-      if(isAdmin){
+    change: function (isAdmin) {
+      if (isAdmin) {
         return 'Admin'
       }
-      else{
+      else {
         return 'Staff'
       }
     },
-    movieRender: function(movie){
-      
-      const category={
-      'phim chiếu rạp': 'phim-chieu-rap'
+    movieRender: function (movie) {
+
+      const category = {
+        'phim chiếu rạp': 'phim-chieu-rap'
       }
       return category[movie]
-      
+
+    },
+    getYear: function (year) {
+      const currentYear = year.getFullYear()
+      const getMonth = year.getMonth() + 1
+      const getDay = year.getDate()
+      if (getMonth < 10) {
+        return `${getDay}-0${getMonth} -${currentYear}`
+      }
+      else if (getDay < 10) {
+        return `0${getDay}-${getMonth} -${currentYear}`
+      }
+      else {
+        return `${getDay}-${getMonth}-${currentYear}`
+      }
+    },
+    gt: (a, b) => a > b,
+    lt: (a, b) => a < b,
+    add: (a, b) => a + b,
+    sub: (a, b) => a - b,
+    range: (totalPages) => {
+      let range = [];
+      for (let i = 1; i <= totalPages; i++) {
+        range.push(i);
+      }
+      return range;
     }
+   
 
 
   }

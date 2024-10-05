@@ -7,7 +7,16 @@ const adminController = require("../app/controllers/AdminController")
 const authMiddleware = require("../app/middleware/authMiddleware")
 const sortMiddleware = require("../app/middleware/sortMiddleware")
 
+// account management
 router.get('/account',adminController.showAccount)
+
+// information account
+router.get('/create/info',adminController.createInfomation)
+router.get('/store/info',adminController.storeInfo)
+router.get('/stored/info',adminController.showInformation)
+router.get('/:id/edit/info',adminController.editInfor)
+router.put('/:id/info',adminController.updateInfo)
+
 router.get('/dashboard',adminController.showDashboard)
 
 // newsController.index 
@@ -26,35 +35,30 @@ router.post('/handle-form-actions',adminController.handleFormActions)
 router.get('/:id/edit',adminController.edit)
 router.get('/:id/edit/category',adminController.editCategory)
 router.get('/:id/edit/catelist',adminController.editCateList)
+
+//sort-delete
 router.delete('/:id/catelist',adminController.deleteCateList)
 router.delete('/:id/category',adminController.deleteCategory)
 router.delete('/:id',adminController.delete)
 
-// xóa vĩnh viễn
+// delete force
 router.delete('/:id/force',adminController.destroy)
 router.delete('/:id/category/force',adminController.destroyCategory)
 router.delete('/:id/catelist/force',adminController.destroyCateList)
+router.delete('/account/:id',adminController.destroyAccount)
 
 router.get('/trash/courses',adminController.trash)
 router.get('/trash/category',adminController.trashCategory)
 router.get('/trash/catelist',adminController.trashCateList)
-// phương thức để chỉnh sửa courses
-router.put('/:id',adminController.update)
-// /admin/{{categories._id}}/category
-router.put('/:id/category',adminController.updateCategory)
 
+router.put('/:id',adminController.update)
+router.put('/:id/category',adminController.updateCategory)
 router.put('/:id/catelist',adminController.updateCateList)
 // patch sẽ là 1 hành động khác các hành động mặc định là hành động restore
 router.patch('/:id/restore',adminController.restore)
-// restore category
 router.patch('/:id/category/restore',adminController.restoreCategory)
 
-router.patch('/:id/catelist/restore',adminController.restoreCateList)
-// cấp route con của /news trỏ về news/path-con-... với phương thức get
-
-
 router.get('/data',authMiddleware.verifyToken,adminController.check)
-
 router.get('/',adminController.show)
 // cấp route con của /news cấu hình param của /news với phương thức get
 

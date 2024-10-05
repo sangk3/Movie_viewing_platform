@@ -4,7 +4,7 @@
         <div class="d-flex align-items-center justify-content-between">
             <a href="/admin/trash/courses" class="text-decoration-none"><i class="fa-solid fa-trash me-2"
                     style="color: #74C0FC;"></i>Thùng rác <span>{{deleteCourse}}</span></a>
-            <a class="btn btn-primary" href="/admin/create" role="button">Add Film</a>
+            <a class="btn btn-primary add-film" href="/admin/create" role="button">Add Film</a>
         </div>
     </div>
 
@@ -85,11 +85,13 @@
             <td>{{this.catelist.name}}</td>
             <td>{{this.category.name}}</td>
             <td>{{countryName this.countries}}</td>
-            <td>{{this.createdAt}}</td>
+            <td>{{getYear this.createdAt}}</td>
             <td>
-                <a href="/admin/{{this._id}}/edit" class="btn btn-link">Sửa</a>
-                <a class="btn btn-link" data-bs-toggle="modal" data-bs-target="#deleteModal"
-                    data-id="{{this._id}}">Xóa</a>
+                <a href="/admin/{{this._id}}/edit" class="btn btn-link"><i class="fa-solid fa-pen-to-square"
+                        style="color: #74C0FC;"></i></a>
+                <a class="btn btn-link" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="{{this._id}}"><i
+                        class="fa-solid fa-trash" style="color: #a01c13;"></i></a>
+                
             </td>
         </tr>
 
@@ -122,7 +124,27 @@
 
 
 {{!-- confirm delete --}}
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+        {{#if (gt currentPage 1)}}
+        <li class="page-item">
+            <a class="page-link" href="?page={{sub currentPage 1}}&pageSize=3">Previous</a>
+        </li>
+        {{/if}}
 
+        {{#each (range totalPages)}}
+        <li class="page-item {{#if (eq this ../currentPage)}}active{{/if}}">
+            <a class="page-link" href="?page={{this}}&pageSize=3">{{this}}</a>
+        </li>
+        {{/each}}
+
+        {{#if (lt currentPage totalPages)}}
+        <li class="page-item">
+            <a class="page-link" href="?page={{add currentPage 1}}&pageSize=3">Next</a>
+        </li>
+        {{/if}}
+    </ul>
+</nav>
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -220,6 +242,7 @@
     }
 
     // Tìm kiếm và đổ dữ liệu vào bảng mới thay cho bảng mặc định 
+
 
 
 </script>

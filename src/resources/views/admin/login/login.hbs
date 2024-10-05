@@ -1,3 +1,4 @@
+
 <h2>LOGIN FORM</h2>
 
 <form name="login-form" method="POST" action="/auth/checklogin">
@@ -15,7 +16,8 @@
 </form>
 
 <script>
-  const checkBtn = document.getElementById("checkBtn");
+
+
 
   checkBtn.onclick = function (e) {
     if (!this.checked) {
@@ -64,10 +66,10 @@
         if (adminRequest.ok) {
           const userData = await adminRequest.json();
           //encode base64
-         const username= btoa(userData.username)
-        //  const usernameEncoded = encodeURIComponent(userData.username);
-        const url = `http://localhost:3000/admin?username=${username}`
-       
+          const username = btoa(userData.username)
+          //  const usernameEncoded = encodeURIComponent(userData.username);
+          const url = `http://localhost:3000/admin?username=${username}`
+
           // Chuyển hướng đến trang admin với dữ liệu username
           window.location.href = url;
         } else {
@@ -81,6 +83,7 @@
     } catch (err) {
       alert('Error Login')
     }
+
 
   }
 
