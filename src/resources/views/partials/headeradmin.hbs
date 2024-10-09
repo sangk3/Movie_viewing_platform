@@ -15,7 +15,8 @@
             Hi <span class="usernameDisplay">guest</span>
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Information</a></li>
+            <li><a class="dropdown-item" href="/user/infor">Đổi mật khẩu</a></li>
+            <li><a class="dropdown-item updateBtn">Cập nhật thông tin</a></li>
             <li><a class="dropdown-item logout" href="/auth/login">Log out</a></li>
           </ul>
 
@@ -29,9 +30,13 @@
   </div>
 </nav>
 <script>
+
   document.addEventListener("DOMContentLoaded", function () {
+    const updateBtn = document.querySelector('.updateBtn');
     const accessToken = localStorage.getItem("accessToken");
     const logout = document.querySelector('.logout')
+    const userAvatar = document.querySelector('.user-avatar')
+
     if (accessToken) {
       // Giải mã token và lấy username
       const tokenParts = accessToken.split('.');
@@ -39,17 +44,55 @@
         const payload = tokenParts[1];
         const decodedPayload = JSON.parse(atob(payload));
         const username = decodedPayload.username;
+        const email = decodedPayload.email;
+        console.log(email)
 
         // Gán username vào phần header
         document.querySelector(".usernameDisplay").textContent = username;
+
+        const response = fetch(`/user/getInformation/${email}`)
+        response
+          .then(function (responses) {
+            return responses.json();
+          })
+          .then(function (data) {
+            if (data.infor.avatar) {
+              userAvatar.src = data.infor.avatar;
+            } else {
+            userAvatar.src = "https://lh3.google.com/u/0/ogw/AF2bZyh7KNyROmACdxmvLsceoJtP5ErMolIc1YNviYikIqJwsA=s32-c-mo"
+            }
+          })
+          .catch(function (error) {
+            return next(error);
+          })
+
+
+
+        updateBtn.addEventListener('click', function (e) {
+          e.preventDefault();
+
+          if (email) {
+            window.location.href = `/user/information/${email}`;
+          } else {
+            console.error("email is not defined.");
+          }
+        });
       }
     }
-    logout.onclick = function(e){
+    logout.onclick = function (e) {
       e.preventDefault();
       localStorage.removeItem("accessToken");
       location.href = "/auth/login";
     }
-    
-  });
+
+
+
+
+
+
+  })
+
+
+
 
 </script>

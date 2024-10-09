@@ -74,12 +74,14 @@ class authController {
                 const accessToken = jwt.sign({
                     id: user.id,
                     admin: user.admin,
-                    username: user.username
+                    username: user.username,
+                    email: user.email
                 }, 'secretKey', { expiresIn: "30d" })
                 const refreshToken = jwt.sign({
                     id: user.id,
                     admin: user.admin,
-                    username: user.username
+                    username: user.username,
+                    email: user.email
                 }, 'refreshKey', { expiresIn: "365d" })
                 refreshTokens.push(refreshToken)
                 res.cookie("refreshToken", refreshToken, {

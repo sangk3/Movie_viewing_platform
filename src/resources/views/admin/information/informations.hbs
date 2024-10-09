@@ -1,0 +1,93 @@
+<div class="mt-1">
+    <h3>Thay đổi thông tin</h3>
+    <form name="add-info">
+        <div class="mb-3">
+            <label for="name" class="form-label">Họ tên</label>
+            <input type="text" class="form-control" name="name" id="name" value='{{infors.name}}'
+                placeholder="Nhập họ tên">
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="text" class="form-control" style="color:#888" name="email" id="email" value="{{infors.email}}" readonly>
+        </div>
+        <div class="mb-3">
+            <label for="phone" class="form-label">Số điện thoại</label>
+            <input type="text" class="form-control" name="phone" id="phone" value="0{{infors.phone}}"
+                placeholder="Nhập số điện thoại">
+        </div>
+        <img class="mt-2" id="preview-avatar" src="{{infors.avatar}}" alt="Xem trước ảnh" style="max-width: 150px;height:100px;">
+        <div class="mb-3">
+            <label for="avatar" class="form-label">Avatar</label>
+            <!-- Ô chọn ảnh -->
+            <input type="file" class="form-control" name="avatar" id="avatar" accept="image/*">
+            <!-- Thêm phần hiển thị ảnh xem trước -->
+            <img class="mt-2" id="preview-avatar" src="{{infors.avatar}}" alt="Xem trước ảnh" style="max-width: 150px;height:100px; display: none;border-radius:50%">
+        </div>
+         
+        <button type="submit" class="btn btn-primary">Cập nhật</button>
+    </form>
+</div>
+
+<script>
+    const avatarInput = document.getElementById('avatar');
+    const previewAvatar = document.getElementById('preview-avatar');
+    let avatarBase64 = ''; // Biến để lưu trữ chuỗi base64 của ảnh
+    const resetPass = document.querySelector('.resetPass');
+   
+    // Hiển thị xem trước ảnh
+    avatarInput.addEventListener('change', function () {
+        const file = avatarInput.files[0]; 1
+        if (file) {
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                previewAvatar.src = e.target.result;
+                previewAvatar.style.display = 'block';  // Hiển thị ảnh xem trước
+                avatarBase64 = e.target.result;  // Lưu chuỗi base64 của ảnh
+            };
+
+            reader.readAsDataURL(file);  // Đọc file dưới dạng base64
+        } else {
+            previewAvatar.style.display = 'none';  // Ẩn ảnh nếu không có file nào được chọn
+            avatarBase64 = '';  // Xóa dữ liệu base64 nếu không có file
+        }
+    });
+
+    // Xử lý khi form được submit
+    const addForm = document.querySelector('form[name="add-info"]');
+    addForm.onsubmit = async function (e) {
+        e.preventDefault();
+
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const phone = document.getElementById('phone').value;
+
+        if (name.trim() === '' || phone.trim() === '') {
+            alert('Vui lòng nhập đầy đủ thông tin');
+            return;
+        }
+
+        // Gửi dữ liệu lên server
+        try {
+            const response = await fetch(`/user/${email}/update`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name, email, phone, avatar: avatarBase64 }) // Thêm chuỗi base64 vào payload
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                alert(data.message);
+                window.location.href = '/admin/dashboard';  // Trở về trang chủ sau khi cập nhật thông tin
+            } else {
+                alert( data.message);
+            }
+        } catch (error) {
+            alert('Đã xảy ra lỗi khi gửi dữ liệu');
+        }
+
+    };
+</script>

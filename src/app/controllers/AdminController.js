@@ -5,6 +5,7 @@ const CateList = require('../models/CateList')
 const Infor = require('../models/Information')
 const { multipleMongooseToObject, mongooseToObject } = require('../../utill/mongoose')
 const { response } = require('express')
+const { trusted } = require('mongoose')
 
 class AdminController {
 
@@ -552,13 +553,25 @@ class AdminController {
                 next(err);
             });
     }
+    // [DELETE] /:id/account
     destroyAccount(req, res, next) {
-        User.deleteOne({ _id: req.params.id })
+        User.delete({ _id: req.params.id })
             .then(function () {
                 res.status(200).json({ message: 'Delete success' })
             })
-            .catch(function (err) {
+            .catch(function () {
                 res.status(500).json({ message: 'Delete fail' })
+            })
+    }
+
+    // [PATCH] /admin/:id/account/restore
+    restoreAccount(req, res, next) {
+        User.restore({ _id: req.params.id })
+            .then(function () {
+                res.redirect('/admin/account')
+            })
+            .catch(function (err) {
+                next(err)
             })
     }
 
@@ -614,21 +627,15 @@ class AdminController {
                 res.json({ message: 'Action is invalid!' })
         }
     }
-
+    // [GET] /admin/accouht
     showAccount(req, res, next) {
-        let accountQuery = User.find({})
-        if (req.query.hasOwnProperty('_sort')) {
-            accountQuery = accountQuery.sort({
-                [req.query.column]: req.query.type
-            })
 
-        }
-
-        accountQuery
-            .then(function (account) {
+        Promise.all([User.find({}), User.countDocumentsWithDeleted({ deleted: true })])
+            .then(function ([account, deleteAccount]) {
                 res.render('admin/account/account-manager', {
                     layout: 'mainadmin',
-                    accounts: multipleMongooseToObject(account)
+                    accounts: multipleMongooseToObject(account),
+                    deleteAccount
                 })
             })
             .catch(function (err) {
@@ -636,6 +643,75 @@ class AdminController {
             })
 
     }
+
+    // [GET] /admin/account/âccount
+    trashAccount(req, res, next) {
+        // findWithDeleted là phương thức của plugin moongoose-delete
+        // chỉ hiển thị các document có deleted: true
+        User.findWithDeleted({ deleted: true })
+            .then(function (accounts) {
+                res.render('admin/account/trash', {
+                    layout: 'mainadmin',
+                    accounts: multipleMongooseToObject(accounts)
+                })
+            })
+            .catch(function (err) {
+                next(err)
+            })
+    }
+    // [GET] /admin/account/edit
+    editAccount(req, res, next) {
+        User.findOne({ _id: req.params.id })
+            .then(function (accounts) {
+                res.render('admin/account/edit', {
+                    layout: 'mainadmin',
+                    accounts: mongooseToObject(accounts)
+                })
+            })
+            .catch(function (err) {
+                next(err)
+            })
+    }
+
+    // [PUT] /admin/:id/account
+    updateAccount(req, res, next) {
+        User.updateOne({ _id: req.params.id }, req.body)
+            .then(function () {
+                res.redirect('/admin/account')
+            })
+            .catch(function (err) {
+                next(err)
+            })
+    }
+
+    handleFormActionAccount(req, res, next) {
+        switch (req.body.action) {
+            case 'delete':
+                // mongoose sử dụng $in để kiểm tra trong 1 mảng so sánh với _id
+                User.delete({ _id: { $in: req.body.accountid } })
+                    .then(function () {
+                        res.redirect('back')
+                    })
+                    .catch(function (err) {
+                        next(err)
+                    })
+
+                break;
+            default:
+                res.json({ message: 'Lỗi khi xóa!' })
+        }
+    }
+//[DELETE] /admin/:id/account/force
+    forceAccount(req,res,next){
+        User.deleteOne({ _id: req.params.id })
+            .then(function () {
+                res.redirect('/admin/account')
+            })
+            .catch(function (err) {
+                next(err)
+            })
+    }
+
 
     showDashboard(req, res, next) {
         res.render('admin/dashboard', {
@@ -673,16 +749,25 @@ class AdminController {
         }
     }
     // [GET] /admin/stored/info
-    async showInformation(req, res, next) {
-        const info = await Infor.find({})
-        res.render('admin/infor/stored-info', {
-            layout: 'mainadmin',
-            infors: multipleMongooseToObject(info)
-        })
+    showInformation(req, res, next) {
+        Promise.all([Infor.find({}), Infor.countDocumentsWithDeleted({ deleted: true })])
+            .then(function ([info, countDeleted]) {
+                res.render('admin/infor/stored-info', {
+                    layout: 'mainadmin',
+                    infors: multipleMongooseToObject(info),
+                    countDeleted
+                })
+            })
+            .catch((err) => {
+                next(err)
+            })
+
+
+
     }
     editInfor(req, res, next) {
         Infor.findOne({ _id: req.params.id })
-            .then(function(info) {
+            .then(function (info) {
                 res.render('admin/infor/edit', {
                     layout: 'mainadmin',
                     info: mongooseToObject(info),
@@ -692,20 +777,90 @@ class AdminController {
                 next(err)
             })
     }
-    updateInfo(req,res,next){
-        Infor.updateOne({_id:req.params.id},{
+    updateInfo(req, res, next) {
+        Infor.updateOne({ _id: req.params.id }, {
             name: req.body.name,
             email: req.body.email,
             phone: req.body.phone,
             address: req.body.address
         })
-        .then(function(){
-            res.status(200).json({message:'Cập nhật thành công'})
-        })
-        .catch(function(){
-            res.status(500).json({message:'Cập nhật thất bại'})
-        })
-        
+            .then(function () {
+                res.status(200).json({ message: 'Cập nhật thành công' })
+            })
+            .catch(function () {
+                res.status(500).json({ message: 'Cập nhật thất bại' })
+            })
+
+
+    }
+    // [PATCH] /admin/:slug/info
+    deleteInfo(req, res, next) {
+        Infor.delete({ email: req.params.slug })
+            .then(function () {
+                User.delete({ email: req.params.slug })
+                    .then(function (result) {
+                        res.status(200).json({ message: 'Xóa thành công' })
+                    })
+                    .catch(function (err) {
+                        res.status(500).json({ message: 'lỗi khi xóa user' })
+                    })
+
+            })
+            .catch(function (err) {
+                res.status(500).json({ message: 'lỗi khi xóa' })
+            })
+
+    }
+    // [GET] /admin/trash/info
+    trashInfo(req, res, next) {
+        Infor.findWithDeleted({ deleted: true })
+            .then(function (infor) {
+                res.render('admin/infor/trash', {
+                    layout: 'mainadmin',
+                    infor: multipleMongooseToObject(infor)
+                })
+            })
+            .catch(function (err) {
+                next(err)
+            })
+    }
+
+    // [PATCH] /admin/info/restore
+    async restoreInfo(req, res, next) {
+        try {
+            const info = await Infor.restore({ email: req.params.slug })
+            const account = await User.restore({ email: req.params.slug })
+            res.redirect('/admin/stored/info')
+        } catch (err) {
+            res.status(500).json({ message: 'lỗi khi khôi phục' })
+        }
+    }
+    handleFormActionsInfo(req, res, next) {
+        switch (req.body.action) {
+            case 'delete':
+                // mongoose sử dụng $in để kiểm tra trong 1 mảng so sánh với _id
+                Infor.delete({ _id: { $in: req.body.inforid } })
+                    .then(function () {
+                        res.redirect('back')
+                    })
+                    .catch(function (err) {
+                        next(err)
+                    })
+
+                break;
+            default:
+                res.json({ message: 'Lỗi khi xóa!' })
+        }
+    }
+    // [DELETE] /admin/:slug/info/force
+    async destroyInfo(req, res, next) {
+        try {
+            const deleteInfo = await Infor.deleteOne({ email: req.params.slug })
+            const deleteAccountt = await User.deleteOne({ email: req.params.slug })
+            res.status(200).json({ message: 'xóa thành công' })
+        } catch (err) {
+            res.status(500).json({ message: 'lỗi khi xóa' })
+        }
     }
 }
 

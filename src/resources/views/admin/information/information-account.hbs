@@ -1,0 +1,75 @@
+<div class="mt-1">
+    <h3>Thay đổi mật khẩu</h3>
+
+    <form name="add-info">
+        <div class="mb-3">
+            <label for="password" class="form-label">Mật khẩu cũ</label>
+            <input type="text" class="form-control" name="password" id="password" placeholder="Nhập mật khẩu cũ">
+        </div>
+        <div class="mb-3">
+            <label for="newpass" class="form-label">Mật khẩu mới</label>
+            <input type="text" class="form-control" name="newpass" id="newpass" placeholder="Nhập mật khẩu mới">
+        </div>
+        <div class="mb-3">
+            <label for="retypepass" class="form-label">Mật khẩu mới</label>
+            <input type="text" class="form-control" name="retypepass" id="retypepass"
+                placeholder="Nhập lại mật khẩu mới">
+        </div>
+        <button type="submit" class="btn btn-primary">Cập nhật</button>
+    </form>
+</div>
+
+<script>
+    const addForm = document.querySelector('form[name="add-info"]')
+    
+    const accessToken = localStorage.getItem("accessToken");
+
+    if (accessToken) {
+        // Giải mã token và lấy username
+        const tokenParts = accessToken.split('.');
+        if (tokenParts.length === 3) {
+            const payload = tokenParts[1];
+            const decodedPayload = JSON.parse(atob(payload));
+            var id = decodedPayload.id;
+        }
+    }
+   
+    addForm.onsubmit = async function (e) {
+        e.preventDefault();
+
+        const password = document.getElementById('password').value;
+        const newpass = document.getElementById('newpass').value;
+        const retypepass = document.getElementById('retypepass').value;
+
+        if (password.trim() === '' || newpass.trim() === '' || retypepass.trim() === '') {
+           return  alert('Vui lòng nhập đầy đủ thông tin')
+        }
+        else if (newpass !== retypepass) {
+           return  alert('Mật khẩu mới và mật khẩu nhập lại không trùng nhau')
+        }
+
+           try {
+            const response = await fetch(`/user/${id}/getinfor`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ password, newpass })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                alert(data.message);
+                window.location.reload();
+            } else {
+                alert(data.message);
+            }
+        } catch (error) {
+            
+            alert('Đã xảy ra lỗi');
+        }
+        
+    }
+
+</script>

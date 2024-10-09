@@ -1,0 +1,42 @@
+<div class="mt-4"></div>
+<h3>Cập nhật tài khoản</h3>
+
+<form class="mt-4" method="POST" action="/admin/{{accounts._id}}/account?_method=PUT">
+    <div class="mb-3">
+        <label for="name" class="form-label">Tên đăng nhập</label>
+        <input type="text" class="form-control" name="name" value="{{accounts.username}}" id="name"
+            placeholder="Nhập tên danh mục">
+    </div>
+    <div class="mb-3">
+        <label for="name" class="form-label">Mật khẩu</label>
+        <input type="text" class="form-control" name="name" value="{{accounts.password}}" id="name" readonly>
+    </div>
+    <div class="mb-3">
+        <label for="name" class="form-label">Email</label>
+        {{!-- text area nhận value dạng childen --}}
+        <input type="text" class="form-control" name="name" value="{{accounts.email}}" id="name"
+            placeholder="Nhập email">
+    </div>
+    <label for="role">Quyền</label>
+    <select class="form-select mb-3 mt-2" name="admin">
+    
+            {{#if accounts.admin}}
+            <option value="true" selected>Admin</option>
+            <option value="false">Staff</option>
+            {{else}}
+            <option value="true">Admin</option>
+            <option value="false" selected>Staff</option>
+            {{/if}}
+        </select>
+
+    </select>
+
+
+
+    <button type="submit" class="btn btn-primary">Sửa</button>
+</form>
+
+</div>
+<script>
+    CKEDITOR.replace('description');
+</script>

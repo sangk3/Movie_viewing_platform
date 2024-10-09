@@ -29,11 +29,12 @@ app.use(morgan('combined'));
 // middleware xử lý dữ liệu khi được gửi lên khi submit form và lưu vào body
 // nên để sử dụng req.body cần sử dụng middleware
 app.use(express.urlencoded({
+  limit: '10mb',
   extended: true
 }));
 
 // middleware xử lý khi được gửi từ code javascript lên
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
 
 // custom middleware
 app.use(sort)
@@ -140,10 +141,13 @@ app.engine('hbs', engine({
         range.push(i);
       }
       return range;
+    },
+    exit: function (role) {
+    return role =true?'Staff':'Admin'
+    },
+    isInArray:function (value, array){
+      return array && array.indexOf(value) !== -1;
     }
-   
-
-
   }
 }));
 app.set('view engine', 'hbs');

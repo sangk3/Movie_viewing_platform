@@ -15,3 +15,110 @@
     position: relative;
     top: -4px;
 }
+.user-avatar {
+    width: 30px;
+    height: 30px;
+    margin-right: 5px;
+    border-radius: 50%;
+}
+.comment{
+    width: 100%;
+    background-color: white;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.comment-head{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    height: auto;
+    border-bottom: 1px solid gray;
+    color: black;
+    margin-top: 10px;
+    padding-bottom: 20px;
+}
+.comment-head-countCmt{
+    display: flex;
+    align-items: center;
+    font-weight: 700;
+}
+.comment-head-sort-select{
+    padding: 5px;
+    font-weight: 700;
+}
+.comment-formUpCmt{
+    margin-top: 20px;
+    display: flex;
+    width: 100%;
+    height: auto;
+}
+
+.comment-formUpCmt-avt-img{
+    width: 48px;
+    height: 48px;
+}
+
+.comment-formUpCmt-input{
+    width: 100%;
+    margin-left: 5px;
+    
+}
+.comment-formUpCmt-input-textarea{
+    width: 100%;
+    height: 62px;
+    text-align: justify;
+    padding: 10px;
+}
+.comment-formUpCmt-input-textarea:focus{
+    border: 1px solid black;
+}
+
+.comment-formUpCmt-input-btnSubmit{
+    padding: 5px;
+    float: right;
+    border: 1px solid gray;
+    border-radius: 2px;
+}
+.comment-listCmt{
+    display: flex;
+}
+.comment-listCmt-blockCmt-avt-img{
+    width: 48px;
+    height: 48px;
+}
+.comment-listCmt{
+    display: block;
+    margin: 2px 0;
+}
+.comment-listCmt-blockCmt{
+    display: flex;
+}
+.comment-listCmt-blockCmt-about{
+    display: flex;
+    flex-direction: column;
+}
+.comment-listCmt-blockCmt-about-actor{
+    font-weight: 600;
+}
+.comment-listCmt-blockCmt-about-content{
+    text-align: justify;
+}
+.comment-listCmt-blockCmt-about-detail-like{
+    text-decoration: none;
+}
+.comment-listCmt-blockCmt-about-detail-reply{
+    text-decoration: none;
+}
+.comment-listCmt-blockCmt-about{
+    margin-left: 5px;
+}
+.comment-listCmt-btnShowCmt{
+    width: 100%;
+    height: 46px;
+    border: none;
+    background-color: rgb(53, 120, 229);
+    margin-top: 20px;
+    color: #fff;
+    font-weight: 600;
+}

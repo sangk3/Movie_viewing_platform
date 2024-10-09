@@ -12,9 +12,97 @@
                     referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                 <p>{{{course.description}}}</p>
                 <p class="duration"></p>
+                 <p class="warning " style="display:none">Vui lòng <a class="text-decoration-none" href="">Đăng nhập</a> để bình luận</p>
             </div>
+            <div class="comment" id="comment-section">
+                <div class="comment-head">
+                    <div class="comment-head-countCmt">
+                        <span>90 bình luận</span>
+                    </div>
+                    <div class="comment-head-sort">
+                        <span>Sắp xếp theo</span>
+                        <select class="comment-head-sort-select" name="" id="">
+                            <option class="comment-head-sort-option" value="">Mới nhất</option>
+                            <option class="comment-head-sort-option" value="">Cũ nhất</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="comment-formUpCmt">
+                    <div class="comment-formUpCmt-avt">
+                        <img class="comment-formUpCmt-avt-img" src="../public/img/bg_img.png" alt="">
+                    </div>
+                    <div class="comment-formUpCmt-input">
+                        <form action="" method="post">
+                            <textarea class="comment-formUpCmt-input-textarea" name="" id=""
+                                placeholder="Bình luận..."></textarea>
+                            <button class="comment-formUpCmt-input-btnSubmit">Bình luận</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="comment-listCmt">
+                    <div class="comment-listCmt-blockCmt">
+                        <div class="comment-listCmt-blockCmt-avt">
+                            <img class="comment-listCmt-blockCmt-avt-img" src="../public/img/bg2_img.png" alt="">
+                        </div>
+                        <div class="comment-listCmt-blockCmt-about">
+                            <span class="comment-listCmt-blockCmt-about-actor">Phạm Đức</span>
+                            <span class="comment-listCmt-blockCmt-about-content">Lorem ipsum dolor sit amet consectetur
+                                adipisicing elit. Nulla tempora similique autem laudantium illum. Nobis veniam ex illum
+                                assumenda nesciunt? Ea quasi sapiente accusantium non? In itaque mollitia ipsa
+                                eligendi!</span>
+                            <div class="comment-listCmt-blockCmt-about-detail">
+                                <a class="comment-listCmt-blockCmt-about-detail-like" href="">Thích</a>
+                                <span class="comment-listCmt-blockCmt-about-detail-dot">.</span>
+                                <a class="comment-listCmt-blockCmt-about-detail-reply" href="">Phản hồi</a>
+                                <span class="comment-listCmt-blockCmt-about-detail-dot">.</span>
+                                <span class="comment-listCmt-blockCmt-about-detail-time">3 tuần</span>
+                            </div>
 
+                        </div>
+                    </div>
+                    <div class="comment-listCmt-blockCmt">
+                        <div class="comment-listCmt-blockCmt-avt">
+                            <img class="comment-listCmt-blockCmt-avt-img" src="../public/img/bg2_img.png" alt="">
+                        </div>
+                        <div class="comment-listCmt-blockCmt-about">
+                            <span class="comment-listCmt-blockCmt-about-actor">Phạm Đức</span>
+                            <span class="comment-listCmt-blockCmt-about-content">Lorem ipsum dolor sit amet consectetur
+                                adipisicing elit. Nulla tempora similique autem laudantium illum. Nobis veniam ex illum
+                                assumenda nesciunt? Ea quasi sapiente accusantium non? In itaque mollitia ipsa
+                                eligendi!</span>
+                            <div class="comment-listCmt-blockCmt-about-detail">
+                                <a class="comment-listCmt-blockCmt-about-detail-like" href="">Thích</a>
+                                <span class="comment-listCmt-blockCmt-about-detail-dot">.</span>
+                                <a class="comment-listCmt-blockCmt-about-detail-reply" href="">Phản hồi</a>
+                                <span class="comment-listCmt-blockCmt-about-detail-dot">.</span>
+                                <span class="comment-listCmt-blockCmt-about-detail-time">3 tuần</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="comment-listCmt-blockCmt">
+                        <div class="comment-listCmt-blockCmt-avt">
+                            <img class="comment-listCmt-blockCmt-avt-img" src="../public/img/bg2_img.png" alt="">
+                        </div>
+                        <div class="comment-listCmt-blockCmt-about">
+                            <span class="comment-listCmt-blockCmt-about-actor">Phạm Đức</span>
+                            <span class="comment-listCmt-blockCmt-about-content">Lorem ipsum dolor sit amet consectetur
+                                adipisicing elit. Nulla tempora similique autem laudantium illum. Nobis veniam ex illum
+                                assumenda nesciunt? Ea quasi sapiente accusantium non? In itaque mollitia ipsa
+                                eligendi!</span>
+                            <div class="comment-listCmt-blockCmt-about-detail">
+                                <a class="comment-listCmt-blockCmt-about-detail-like" href="">Thích</a>
+                                <span class="comment-listCmt-blockCmt-about-detail-dot">.</span>
+                                <a class="comment-listCmt-blockCmt-about-detail-reply" href="">Phản hồi</a>
+                                <span class="comment-listCmt-blockCmt-about-detail-dot">.</span>
+                                <span class="comment-listCmt-blockCmt-about-detail-time">3 tuần</span>
+                            </div>
+                        </div>
+                    </div>
 
+                </div>
+                
+            </div>
+           
         </div>
     </div>
 
@@ -68,6 +156,15 @@
     };
 
     fetchVideoDuration(); // Gọi hàm để lấy duration
+    const accessToken = localStorage.getItem('accessToken');
+    const commentSection = document.getElementById('comment-section');
+    const warning = document.querySelector('.warning');
+    console.log(warning)
 
+    if (!accessToken) {
+        // Nếu không có accessToken, ẩn phần bình luận
+        commentSection.style.display = 'none';
+        warning.style.display = 'block';
+    }
 
 </script>

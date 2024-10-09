@@ -1,9 +1,9 @@
-<form name="container-form" class="mt-2" method="POST" action="/admin/handle-form-actions">
+<form name="container-form" class="mt-2" method="POST" action="/admin/handle-form-actions/account">
     <div>
         <h3>Quản lý Account</h3>
         <div class="d-flex align-items-center justify-content-between">
-            <a href="/admin/trash/courses" class="text-decoration-none"><i class="fa-solid fa-trash me-2"
-                    style="color: #74C0FC;"></i>Thùng rác <span>{{deleteCourse}}</span></a>
+            <a href="/admin/trash/account" class="text-decoration-none"><i class="fa-solid fa-trash me-2"
+                    style="color: #74C0FC;"></i>Thùng rác <span>{{deleteAccount}}</span></a>
             <a class="btn btn-primary" href="/auth/register" role="button">Thêm account</a>
         </div>
     </div>
@@ -42,37 +42,36 @@
         {{!-- colspan là cột này bằng bn lần cột cơ sở trong table --}}
         <th scope="col">#</th>
         <th scope="col">STT</th>
-        <th scope="col">Username</th>
-        <th scope="col">Password</th>
+        <th scope="col">Tên đăng nhập</th>
+        <th scope="col">Mật khẩu</th>
         <th scope="col">Email</th>
-        <th scope="col">Role</th>
-        <th scope="col">Time create
-            {{{sort 'createdAt' _sort}}}
-        </th>
-        <th scope="col">Chức năng</th>
+        <th scope="col">Quyền</th>
+        <th class="title-table" scope="col">Chức năng</th>
 
     </thead>
     <tbody>
         {{#each accounts}}
-        <tr>
+        <tr class="data-row">
+
             <td>
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="courseid[]" value="{{this._id}}">
+                    <input class="form-check-input" type="checkbox" name="accountid[]" value="{{this._id}}">
 
                 </div>
             </td>
             {{!-- {{index}} Lấy ra chỉ mục của array --}}
             {{!-- tạo ra function sum ở Index.js nhận 2 biến index và 1 --}}
-            <td scope="row">{{sum @index 1}}</td>
-            <td>{{this.username}}</td> 
+            <th scope="row">{{sum @index 1}}</th>
+            <td>{{this.username}}</td>
             <td>{{{this.password}}}</td>
             <td>{{{this.email}}}</td>
             <td>{{change this.admin}}</td>
-            <td>{{getYear this.createdAt}}</td>
-            <td>
-                <a href="/admin/{{this._id}}/account-edit" class="btn btn-link">Sửa</a>
-                <a class="btn btn-link" data-bs-toggle="modal" data-bs-target="#deleteModal"
-                    data-id="{{this._id}}">Xóa</a>
+            {{!-- <td>{{getYear this.createdAt}}</td> --}}
+            <td class="title-table"> 
+                <a href="/admin/{{this._id}}/account/edit" class="btn btn-link text-decoration-none "><i
+                        class="fa-solid fa-pen-to-square fa-lg" style="color: #74C0FC;"></i></a>
+                <a class="btn btn-link text-decoration-none" data-bs-toggle="modal" data-bs-target="#deleteModal"
+                    data-id="{{this._id}}"><i class="fa-solid fa-trash-can fa-lg" style="color: #de1b1b;"></i></a>
             </td>
         </tr>
         {{!-- handlebars cung cấp {{else}} khi each không có dữ liệu thì vào else --}}
@@ -121,7 +120,7 @@
     var deleteform = document.querySelector('form[name="delete-form"]');
     const deleteModal = document.getElementById('deleteModal')
     var checkAll = $('#checkAll')
-    var checkItem = $('input[name="courseid[]"]')
+    var checkItem = $('input[name="accountid[]"]')
     var checkAllSubmitBtn = $('.btn-check-all-submit')
     var containerForm = $('form[name="container-form"]')
 
@@ -136,32 +135,25 @@
 
     var deleteButton = document.getElementById('btn-delete');
     // Khi mà người dùng nhấn nút click
-    deleteButton.onclick = function () {
-        //deleteform.action = `/admin/${deleteid}/account?_method=DELETE`
-        //deleteform.submit();
+    deleteButton.onclick =async function () {
+          deleteModal.style.display='none'
 
-        const responses = fetch(`/admin/account/${deleteid}`, {
+        const responses = await fetch(`/admin/account/${deleteid}`, {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' }
         })
 
-        responses
-            .then(function (response) {
-                // Kiểm tra phản hồi trước khi xử lý JSON
-                return response.json(); // Chuyển đổi phản hồi thành JSON
-            })
-            .then(function (data) {
+       const data = await responses.json()
+            try{
                 if (responses.ok) {
+                  
                     alert(data.message); // Hiển thị thông báo từ server
                     window.location.reload(); // Tải lại trang sau khi xóa thành công
                 }
-                else {
-                    alert(data.message); // Thông báo lỗi từ server
-                }
-            })
-            .catch(function (error) {
-                 alert('Delete failed. Please try again.'); // Hiển thị thông báo lỗi nếu fetch thất bại
-            });
+         
+            }catch(error) {
+                alert(data.message); // Hiển thị thông báo lỗi nếu fetch thất bại
+            };
 
 
     }
@@ -177,7 +169,7 @@
     // checkItems clicked
     checkItem.change(function () {
         // Khó cần đọc kĩ
-        var isCheckAll = checkItem.length === $('input[name="courseid[]"]:checked').length
+        var isCheckAll = checkItem.length === $('input[name="accountid[]"]:checked').length
         // Kiểm tra nếu như các checkItem đều được check thì isCheckAll sẽ là true còn không thì ngược lại 
         isCheckAll ? checkAll.prop('checked', true) : checkAll.prop('checked', false)
 
@@ -202,7 +194,7 @@
 
     function renderCheckAllSubmitButton() {
         // số lượng các ô đã check ('input[name="courseid[]"]:checked').length
-        var checkCount = $('input[name="courseid[]"]:checked').length
+        var checkCount = $('input[name="accountid[]"]:checked').length
         if (checkCount > 0) {
             // console ra xem các phương thức của element được select theo jquery
             checkAllSubmitBtn.removeClass('disabled')

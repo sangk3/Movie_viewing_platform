@@ -9,13 +9,25 @@ const sortMiddleware = require("../app/middleware/sortMiddleware")
 
 // account management
 router.get('/account',adminController.showAccount)
-
+router.get('/trash/account',adminController.trashAccount)
+router.get('/:id/account/edit',adminController.editAccount)
+router.put('/:id/account',adminController.updateAccount)
+router.delete('/account/:id',adminController.destroyAccount)
+router.patch('/:id/account/restore',adminController.restoreAccount)
+router.post('/handle-form-actions/account',adminController.handleFormActionAccount)
+router.delete('/:id/account/force',adminController.forceAccount)
 // information account
+
 router.get('/create/info',adminController.createInfomation)
-router.get('/store/info',adminController.storeInfo)
+router.post('/store/info',adminController.storeInfo)
 router.get('/stored/info',adminController.showInformation)
 router.get('/:id/edit/info',adminController.editInfor)
 router.put('/:id/info',adminController.updateInfo)
+router.delete('/:slug/info',adminController.deleteInfo)
+router.get('/trash/info',adminController.trashInfo)
+router.patch('/:slug/info/restore',adminController.restoreInfo)
+router.post('/handle-form-actions/info',adminController.handleFormActionsInfo)
+router.delete('/:slug/info/force',adminController.destroyInfo)
 
 router.get('/dashboard',adminController.showDashboard)
 
@@ -45,7 +57,7 @@ router.delete('/:id',adminController.delete)
 router.delete('/:id/force',adminController.destroy)
 router.delete('/:id/category/force',adminController.destroyCategory)
 router.delete('/:id/catelist/force',adminController.destroyCateList)
-router.delete('/account/:id',adminController.destroyAccount)
+
 
 router.get('/trash/courses',adminController.trash)
 router.get('/trash/category',adminController.trashCategory)

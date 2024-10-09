@@ -3,7 +3,7 @@
         <h3>Quản lý thông tin người dùng</h3>
         <div class="d-flex align-items-center justify-content-between">
             <a href="/admin/trash/info" class="text-decoration-none"><i class="fa-solid fa-trash me-2"
-                    style="color: #74C0FC;"></i>Thùng rác <span>{{deleteCategories}}</span></a>
+                    style="color: #74C0FC;"></i>Thùng rác <span>{{countDeleted}}</span></a>
             <a class="btn btn-primary" href="/admin/create/info" role="button">Thêm thông tin</a>
         </div>
 
@@ -39,7 +39,7 @@
             <th scope="col">Email</th>
             <th scope="col">Số điện thoại</th>
             <th scope="col">Địa chỉ</th>
-            <th scope="col">Chức năng</th>
+            <th class="title-table" scope="col">Chức năng</th>
 
         </thead>
         <tbody>
@@ -47,23 +47,22 @@
             <tr>
                 <td>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="categoryid[]" value="{{this._id}}">
+                        <input class="form-check-input" type="checkbox" name="inforid[]" value="{{this._id}}">
 
                     </div>
                 </td>
                 {{!-- {{index}} Lấy ra chỉ mục của array --}}
                 {{!-- tạo ra function sum ở Index.js nhận 2 biến index và 1 --}}
-                <th scope="row">{{sum @index 1}}</th>
+                <td scope="row">{{sum @index 1}}</td>
                 <td>{{this.name}}</td>
                 <td>{{this.email}}</td>
                 <td>0{{this.phone}}</td>
                 <td>{{{this.address}}}</td>
-                <td>
-                    <a href="/admin/{{this._id}}/edit/info" class="btn btn-link updateBtn"
-                       ><i class="fa-solid fa-pen-to-square fa-lg"
-                            style="color: #74C0FC;"></i></a>
+                <td class="title-table">
+                    <a href="/admin/{{this._id}}/edit/info" class="btn btn-link updateBtn"><i
+                            class="fa-solid fa-pen-to-square fa-lg" style="color: #74C0FC;"></i></a>
                     <a class="btn btn-link" data-bs-toggle="modal" data-bs-target="#deleteModal"
-                        data-id="{{this._id}}"><i class="fa-solid fa-trash-can fa-lg" style="color: #ed0707;"></i></a>
+                        data-id="{{this.email}}"><i class="fa-solid fa-trash-can fa-lg" style="color: #ed0707;"></i></a>
                     <a class="btn btn-link create-account" href='/auth/register?email={{this.email}}'><i
                             class="fa-solid fa-plus" style="color: #63E6BE;"></i></a>
                 </td>
@@ -111,30 +110,49 @@
 {{!-- dùng boostrap để lấy được data khi nhấn nút yes--}}
 <script>
 
-    var deleteid;
+    var deleteEmail;
     var deleteform = document.querySelector('form[name="delete-form"]');
     const deleteModal = document.getElementById('deleteModal')
     var checkAll = $('#checkAll')
-    var checkItem = $('input[name="categoryid[]"]')
+    var checkItem = $('input[name="inforid[]"]')
     var checkAllSubmitBtn = $('.btn-check-all-submit')
     var containerForm = $('form[name="container-form"]')
-
     if (deleteModal) {
         deleteModal.addEventListener('show.bs.modal', event => {
             var button = event.relatedTarget
-            deleteid = button.getAttribute('data-id')
-
+            deleteEmail = button.getAttribute('data-id')
         });
-
     }
-
     var deleteButton = document.getElementById('btn-delete');
     // Khi mà người dùng nhấn nút click
-    deleteButton.onclick = function () {
-        deleteform.action = `/admin/${deleteid}/catelist?_method=DELETE`
-        deleteform.submit();
-
+    deleteButton.onclick = async function (e) {
+        deleteModal.style.display = 'none';
+        //deleteform.action = `/admin/${deleteEmail}/info?_method=DELETE`
+        //deleteform.submit();
+        try {
+            const deleteInfo = await fetch(`/admin/${deleteEmail}/info`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            const data = await deleteInfo.json()
+            if (deleteInfo.ok) {
+                alert(data.message)
+                window.location.reload()
+            }
+        }
+        catch (error) {
+            alert(data.message)
+        }
     }
+
+    // Xử lý form
+    containerForm.on('submit', async function (e) {
+
+
+
+    })
     // phương thức của jquery khi bất sự kiện
     // $(this) lấy ra được element đó 
     // sử dụng prop để thêm thuộc tính cho element = setAttribute('checked','true')
@@ -147,7 +165,7 @@
     // checkItems clicked
     checkItem.change(function () {
         // Khó cần đọc kĩ
-        var isCheckAll = checkItem.length === $('input[name="categoryid[]"]:checked').length
+        var isCheckAll = checkItem.length === $('input[name="inforid[]"]:checked').length
         // Kiểm tra nếu như các checkItem đều được check thì isCheckAll sẽ là true còn không thì ngược lại 
         isCheckAll ? checkAll.prop('checked', true) : checkAll.prop('checked', false)
         renderCheckAllSubmitButton()
@@ -161,7 +179,7 @@
     })
     function renderCheckAllSubmitButton() {
         // số lượng các ô đã check ('input[name="courseid[]"]:checked').length
-        var checkCount = $('input[name="categoryid[]"]:checked').length
+        var checkCount = $('input[name="inforid[]"]:checked').length
         if (checkCount > 0) {
             // console ra xem các phương thức của element được select theo jquery
             checkAllSubmitBtn.removeClass('disabled')
@@ -170,9 +188,9 @@
             checkAllSubmitBtn.addClass('disabled')
         }
     }
-   
 
-    
+
+
 
 </script>
 {{!-- delteform.submit() sẽ submit form đi với phương thức DELETE --}}
