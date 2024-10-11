@@ -1,0 +1,79 @@
+<div class="main">
+    <form class="form form-registers">
+        <h1 class="text-white">Sign up</h1>
+        <div class="form-input flex-box">
+            <input class="input" type="text" placeholder="Tên đăng nhập" name="username">
+            <span class="icon"><i class="fa-solid fa-user"></i></span>
+        </div>
+        <div class="form-input flex-box">
+            <input class="input" type="text" placeholder="Email" name="email">
+            <span class="icon"><i class="fa-solid fa-envelope"></i></span>
+        </div>
+        <div class="form-input flex-box">
+            <input class="input" type="password" placeholder="Mật khẩu" name="password">
+            <span class="icon"><i id="show-pass" class="fa-solid fa-eye"></i><i id="hidden-pass"
+                    class="fa-solid fa-eye-slash display-none"></i></span>
+        </div>
+
+        <button type="submit" class="form-submit-button">Register</button>
+
+        <div class="form-register flex-box">
+            <p class="form-register-text m-0">I have account?</p>
+            <a class="form-register-link-register" href="/viewer/login">Login</a>
+        </div>
+    </form>
+</div>
+<script>
+    var message = document.querySelector('.message')
+    var pass = document.querySelector('input[name="password"]')
+    var show = document.getElementById('show-pass')
+    var hidden = document.getElementById('hidden-pass')
+    let formRegis = document.querySelector('.form-registers')
+    show.onclick = function () {
+        show.style = 'display:none'
+        hidden.style = 'display:block'
+        pass.type = 'text'
+    }
+    hidden.onclick = function () {
+        hidden.style = 'display:none'
+        show.style = 'display:block'
+        pass.type = 'password'
+    }
+
+    formRegis.onsubmit = async function (e) {
+        e.preventDefault()
+        var username = document.querySelector('input[name="username"]').value
+        var email = document.querySelector('input[name="email"]').value
+        var password = pass.value
+        console.log(password)
+
+        if (username.trim() === '' || email.trim() === '' || password.trim() === '') {
+            alert('Vui lòng nhập đầy đủ thông tin')
+        }
+        else if (!email.match(/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/)) {
+            alert('email sai định dạng');
+        }
+        const response = await fetch('/viewer/createViewer', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                username,
+                email,
+                password
+            })
+        })
+
+        const data = await response.json()
+        if (response.ok) {
+            alert(data.message)
+            window.location.href= 'https://localhost:3000/viewer/login'
+        }
+        else {
+            alert(data.message)
+        }
+
+    }
+
+</script>

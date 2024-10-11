@@ -1,0 +1,38 @@
+<div class="main">
+    <form class="form">
+        <h1 class="text-white">Login</h1>
+        <div class="form-input flex-box">
+            <input class="input" type="text" name="username" placeholder="Tên đăng nhập">
+            <span class="icon"><i class="fa-solid fa-user"></i></span>
+        </div>
+        <div class="form-input flex-box">
+            <input class="input" type="password" name="password" placeholder="Mật khẩu">
+            <span class="icon"><i id="show-pass" class="fa-solid fa-eye"></i>
+                <i id="hidden-pass" class="fa-solid fa-eye-slash display-none"></i></span>
+        </div>
+        <div class="form-submit flex-box">
+            <button class="form-submit-button">Login</button>
+        </div>
+        <div class="form-register flex-box">
+            <p class="form-register-text m-0">Don't have account?</p>
+            <a class="form-register-link-register" href="/viewer/register">Register</a>
+        </div>
+
+
+    </form>
+</div>
+<script>
+    var pass = document.querySelector('input[name="password"]')
+    var show = document.getElementById('show-pass')
+    var hidden = document.getElementById('hidden-pass')
+    show.onclick = function () {
+        show.style = 'display:none'
+        hidden.style = 'display:block'
+        pass.type = 'text'
+    }
+    hidden.onclick = function () {
+        hidden.style = 'display:none'
+        show.style = 'display:block'
+        pass.type = 'password'
+    }
+</script>
